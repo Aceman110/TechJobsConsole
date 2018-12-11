@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TechJobsConsole
 {
@@ -63,7 +64,7 @@ namespace TechJobsConsole
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        PrintJobs(JobData.FindByValue(searchTerm));
                     }
                     else
                     {
@@ -98,9 +99,11 @@ namespace TechJobsConsole
                 {
                     Console.WriteLine(j + " - " + choices[choiceKeys[j]]);
                 }
-
                 string input = Console.ReadLine();
                 choiceIdx = int.Parse(input);
+                // exit if user enter '9'
+                if (choiceIdx == 9)
+                    Environment.Exit(0);
 
                 if (choiceIdx < 0 || choiceIdx >= choiceKeys.Length)
                 {
@@ -109,16 +112,27 @@ namespace TechJobsConsole
                 else
                 {
                     isValidChoice = true;
-                }
-
+                    return choiceKeys[choiceIdx];
+                }    
             } while (!isValidChoice);
-
             return choiceKeys[choiceIdx];
         }
 
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
-        {
-            Console.WriteLine("printJobs is not implemented yet");
+        {   
+            foreach (var job in someJobs)
+            {
+                var name = (string)job["name"];
+                var employer = (string)job["employer"];
+                var location = (string)job["location"];
+                var type = (string)job["position type"];
+                var competency = (string)job["core competency"];
+
+                // name,employer,location,position type, core competency  string.Join(",", job)
+                Console.WriteLine(new string('-', 20) + "\n Name:{0}\n Employer: {1}\n Location:" +
+                    " {2}\n Position Type: {3}\n Skill: {4}\n" + new string('-', 20),
+                    name, employer, location, type, competency);
+            }
         }
     }
 }
